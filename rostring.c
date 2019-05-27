@@ -6,77 +6,80 @@
 /*   By: wanderer <wanderer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/05 21:23:50 by wanderer          #+#    #+#             */
-/*   Updated: 2019/05/13 21:40:52 by wanderer         ###   ########.fr       */
+/*   Updated: 2019/05/27 17:00:12 by wanderer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <stdlib.h>
 
-void	ft_putchar(char c)
+int		ft_isblanka(char c)
 {
-	write(1, &c, 1);
+	if (c == ' ' || c == '\t')
+		return (1);
+	return (0);
 }
 
-int		ft_strlen(char *s)
+void	ft_putstr(char *start)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while (s[i])
+	while (start[i] && ft_isblanka(start[i]))
 		i++;
-	return (i);
+	while (start[i])
+	{
+		if (start[i] == ' ' || start[i] == '\t')
+		{
+			while (start[i] && ft_isblanka(start[i]))
+				i++;
+			if (start[i])
+				write(1, " ", 1);
+		}
+		write(1, &start[i], 1);
+		i++;
+	}
 }
 
-void	rostring(char *s)
+void	rostring(char *start)
 {
-	int i;
-	int start;
-	int end;
+	int	i;
+	int	end;
+	int	test;
 
 	i = 0;
-	while (s[i] && (s[i] == ' ' || s[i] == '\t' || s[i] == '\n'))
+	while (start[i] && ft_isblanka(start[i]))
 		i++;
-	start = i;
-	while (s[i] && s[i] != ' ' && s[i] != '\t' && s[i] != '\t')
+	test = i;
+	while (start[i] && !ft_isblanka(start[i]))
 		i++;
 	end = i;
-	while (s[i])
-	{
-		while (s[i] && (s[i] == ' ' || s[i] == '\t' || s[i] == '\n'))
-			i++;
-		if (s[i] && s[i] != ' ' && s[i] != '\t' && s[i] != '\t')
-		{
-			while (s[i] && s[i] != ' ' && s[i] != '\t' && s[i] != '\t')
-			{
-				ft_putchar(s[i]);
-				i++;
-			}
-			ft_putchar(' ');
-		}
-	}
-	while (start < end)
-	{
-		ft_putchar(s[start]);
-		start++;
-	}
+	while (start[i] && ft_isblanka(start[i]))
+		i++;
+	ft_putstr(&start[i]);
+	start[i] ? write(1, " ", 1) : write(0, "", 0);
+	i = test;
+	while (i != end)
+			write(1, &start[i++], 1);
+	write(1, "\n", 1);
 }
 
-int		main(int ac, char **av)
+int		main(int argc, char **argv)
 {
-	int i;
+	int	i;
 
-	if (ac > 1)
+	i = 2;
+	if (argc >= 2)
 	{
-		i = 1;
-		while (i < ac)
+		rostring(argv[1]);
+		while (argv[i])
 		{
-			rostring(av[i]);
-			ft_putchar('\n');
-			i++;
+			ft_putstr(argv[i++]);
+			write(1, "\n", 1);
 		}
 	}
 	else
-		ft_putchar('\n');
+		write(1, "\n", 1);
 	return (0);
 }
+//./a.out "11 ewqq   eqwewq      "  dsa 111 " 11  222"| cat -e
