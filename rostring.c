@@ -6,7 +6,7 @@
 /*   By: wanderer <wanderer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/05 21:23:50 by wanderer          #+#    #+#             */
-/*   Updated: 2019/05/27 17:00:12 by wanderer         ###   ########.fr       */
+/*   Updated: 2019/06/02 18:30:43 by wanderer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,14 @@ void	ft_putstr(char *start)
 		i++;
 	while (start[i])
 	{
-		if (start[i] == ' ' || start[i] == '\t')
+		if (ft_isblanka(start[i]))
 		{
 			while (start[i] && ft_isblanka(start[i]))
 				i++;
 			if (start[i])
 				write(1, " ", 1);
+			else
+				break ;
 		}
 		write(1, &start[i], 1);
 		i++;
