@@ -6,7 +6,7 @@
 /*   By: wanderer <wanderer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/05 20:35:18 by wanderer          #+#    #+#             */
-/*   Updated: 2019/05/06 15:30:05 by wanderer         ###   ########.fr       */
+/*   Updated: 2019/06/17 23:12:00 by wanderer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,89 +14,57 @@
 
 #include <stdlib.h>
 
-int			ft_strlen(char *s)
+char *ft_strcat(int dur, char *s)
 {
-	int		i;
+	int len;
+	int tmp;
+	int start;
+	char *stroke;
 
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
-}
-
-unsigned int		ft_uintlen(unsigned int nb)
-{
-	unsigned int	i;
-
-	i = 0;
-	if (nb == 0)
-		i = 1;
-	while (nb > 0)
+	len = 0;
+	tmp = dur;
+	while (s[len])
+		len++;
+	start = len;
+	while ((tmp = tmp/ 10) > 0)
+		len++;
+	start = len - start;
+	stroke = (char *)malloc(sizeof(char) * (len + 1));
+	len = start;
+	while (start != -1)
 	{
-		nb /= 10;
-		i++;
+		stroke[start--] = dur % 10 + '0';
+		dur = dur / 10;
 	}
-	return (i);
+	dur = 0;
+	while (s[dur])
+	 	stroke[++len] = s[dur++];
+	stroke[++len] = '\0';
+	return (stroke);
 }
 
-char		*ft_strcat(char *s1, char *s2)
-{
-	char	*res;
-	int		i;
-	int		j;
-
-	if (!(res = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1))))
-		return (NULL);
-	i = 0;
-	j = 0;
-	while (s1[i])
-		res[j++] = s1[i++];
-	i = 0;
-	while (s2[i])
-		res[j++] = s2[i++];
-	res[j] = '\0';
-	return (res);
-}
-
-char		*ft_utoa(unsigned int nb)
-{
-	int		len;
-	char	*tab;
-
-	len = ft_uintlen(nb);
-	if (!(tab = malloc(sizeof(char) * len + 1)))
-		return (NULL);
-	tab[len] = '\0';
-	while (nb != 0)
-	{
-		tab[--len] = (nb % 10) + '0';
-		nb = nb / 10;
-	}
-	return (tab);
-}
-
-char	*moment(unsigned int duration)
+char    *moment(unsigned int duration)
 {
 	if (duration == 0)
 		return ("0 seconds ago.");
 	else if (duration == 1)
 		return ("1 second ago.");
 	else if (duration < 60)
-		return (ft_strcat(ft_utoa(duration), " seconds ago."));
-	else if (duration < 120)
+		return (ft_strcat(duration, " seconds ago."));
+	else if (duration == 60)
 		return ("1 minute ago.");
-	else if (duration < 3600)
-		return (ft_strcat(ft_utoa(duration / 60), " minutes ago."));
-	else if (duration < 7200)
+	else if (duration < 60 * 60)
+		return (ft_strcat(duration / 60, " minutes ago."));
+	else if (duration < 60 * 60 * 2)
 		return ("1 hour ago.");
-	else if (duration < 86400)
-		return (ft_strcat(ft_utoa(duration / 3600), " hours ago."));
-	else if (duration < 172800)
+	else if (duration < 60 * 60 * 12 * 2)
+		return (ft_strcat(duration / (60 * 60), " hours ago."));
+	else if (duration < 60 * 60 * 24 * 2)
 		return ("1 day ago.");
-	else if (duration < 2592000)
-		return (ft_strcat(ft_utoa(duration / 86400), " days ago."));
-	else if (duration < 5184000)
+	else if (duration < 60 * 60 * 24 * 30)
+		return (ft_strcat(duration / (60 * 60 * 24 * 2), " days ago.")); //86400  2592000
+	else if (duration < 60 * 60 * 24 * 2)
 		return ("1 month ago.");
 	else
-		return (ft_strcat(ft_utoa(duration / 2592000), " months ago."));
+		return (ft_strcat(duration / (60 * 60 * 24 * 30 * 2), " months ago."));
 }
